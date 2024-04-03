@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Biljard")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dfad4cc07654d8e1e5cd11373e906c4f70d22698")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bb13e540f7a0fcc4035e521a3ef6a14c92b82ed3")]
 [assembly: System.Reflection.AssemblyProductAttribute("Biljard")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Biljard")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
