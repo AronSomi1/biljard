@@ -20,6 +20,19 @@
             updateQueue(); // Update the queue after joining
         }
 
+        async function userReady() {
+            const username = document.getElementById('username').value;
+            const lobbyId = window.location.pathname.split('/').pop();
+
+            await fetch(`/lobby/${lobbyId}/userReady`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(username)
+            });
+
+        }
         async function updateQueue() {
             const lobbyId = window.location.pathname.split('/').pop();
 
@@ -30,11 +43,12 @@
             // Display the queue
             const queueList = document.getElementById('queue');
             queueList.innerHTML = ''; // Clear existing queue
-            queue.forEach(user => {
+
+            for (const [user, isReady] of Object.entries(queue)) {
                 const li = document.createElement('li');
-                li.textContent = user;
+                li.textContent = `${user} - Ready: ${isReady}`;
                 queueList.appendChild(li);
-            });
+            }
         }
 
         // Periodically refresh the queue
@@ -47,7 +61,7 @@
 <body>
     <input type="text" id="username" placeholder="Enter Username">
     <button onclick="joinQueue()">Join Queue</button>
-
+    <button onclick="userReady()">Ready</button>
     <h2>Queue</h2>
     <ul id="queue"></ul>
 </body>

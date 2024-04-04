@@ -73,13 +73,20 @@ app.MapPost("/lobby/{id}/addUser", (LobbyHandler lb, int id, [FromBody] string u
     return await next(context);
 });
 
+app.MapPost("/lobby/{id}/userReady", (LobbyHandler lb, int id, [FromBody] string Username) =>
+{
+    var lobby = lb.GetLobby(id);
+    lobby.UserReady(Username);
+    return TypedResults.Ok(new { id, Username });
+}
+);
+
+
 app.MapGet("/lobby/{id}/queue", (LobbyHandler lb, int id) =>
 {
     var users = lb.GetUsersInLobby(id);
     return TypedResults.Ok(users);
 });
-
-
 
 
 app.Run();
@@ -88,7 +95,10 @@ app.Run();
 class LobbyHandler
 {
     private readonly Dictionary<int, Lobby> lobbies = new();
-
+    public Lobby GetLobby(int id)
+    {
+        return lobbies[id];
+    }
     public Boolean Found(int value)
     {
         return lobbies.ContainsKey(value);
@@ -105,19 +115,16 @@ class LobbyHandler
     {
         if (lobbies.ContainsKey(id))
         {
-            lobbies[id].Usernames.Add(username);
+            lobbies[id].AddUser(username);
             return true;
         }
         return false;
     }
-    public List<string> GetUsersInLobby(int id)
+    public Dictionary<string, string> GetUsersInLobby(int id)
     {
-        if (lobbies.ContainsKey(id))
-        {
-            return lobbies[id].Usernames;
-        }
-        return null;
+        return lobbies[id].GetMappedUsersInLobby();
     }
+
 
 }
 
@@ -125,4 +132,45 @@ public class Lobby
 {
     public int Id { get; set; }
     public List<string> Usernames { get; set; } = new List<string>();
+    private Dictionary<string, bool> UsersReady = new();
+
+    public void AddUser(string username)
+    {
+        Usernames.Add(username);
+        UsersReady.Add(username, false);
+    }
+    public void UserReady(string username)
+    {
+        UsersReady[username] = !UsersReady[username];
+
+    }
+
+    public bool IsUserReady(string username)
+    {
+        return UsersReady[username];
+    }
+    public bool CheckIfAllUsersReady()
+    {
+        foreach (var user in Usernames)
+        {
+            if (!UsersReady.ContainsKey(user))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Dictionary<string, string> GetMappedUsersInLobby()
+    {
+        Dictionary<string, string> users = new();
+
+        foreach (var u in Usernames)
+        {
+            users.Add(u, IsUserReady(u).ToString());
+        }
+        return users;
+    }
+
+
 }
