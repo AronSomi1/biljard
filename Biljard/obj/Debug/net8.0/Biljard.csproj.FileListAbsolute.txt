@@ -24,3 +24,4 @@ C:\Users\Aron Somi\Desktop\biljard_projekt\biljard\Biljard\obj\Debug\net8.0\refi
 C:\Users\Aron Somi\Desktop\biljard_projekt\biljard\Biljard\obj\Debug\net8.0\Biljard.pdb
 C:\Users\Aron Somi\Desktop\biljard_projekt\biljard\Biljard\obj\Debug\net8.0\Biljard.genruntimeconfig.cache
 C:\Users\Aron Somi\Desktop\biljard_projekt\biljard\Biljard\obj\Debug\net8.0\ref\Biljard.dll
+C:\Users\Aron Somi\Desktop\biljard_projekt\biljard\Biljard\bin\Debug\net8.0\Biljard.staticwebassets.runtime.json

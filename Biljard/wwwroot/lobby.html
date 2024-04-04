@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Lobby Queue</title>
+    <script>
+        async function joinQueue() {
+            const username = document.getElementById('username').value;
+            const lobbyId = window.location.pathname.split('/').pop();
+
+            // POST the username to the server
+            await fetch(`/lobby/${lobbyId}/addUser`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(username)
+            });
+
+            updateQueue(); // Update the queue after joining
+        }
+
+        async function updateQueue() {
+            const lobbyId = window.location.pathname.split('/').pop();
+
+            // Get the current queue from the server
+            const response = await fetch(`/lobby/${lobbyId}/queue`);
+            const queue = await response.json();
+
+            // Display the queue
+            const queueList = document.getElementById('queue');
+            queueList.innerHTML = ''; // Clear existing queue
+            queue.forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = user;
+                queueList.appendChild(li);
+            });
+        }
+
+        // Periodically refresh the queue
+        setInterval(updateQueue, 5000); // 5 seconds
+
+        document.addEventListener('DOMContentLoaded', updateQueue); // Initial load
+    </script>
+</head>
+
+<body>
+    <input type="text" id="username" placeholder="Enter Username">
+    <button onclick="joinQueue()">Join Queue</button>
+
+    <h2>Queue</h2>
+    <ul id="queue"></ul>
+</body>
+
+</html>

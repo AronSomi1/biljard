@@ -1,11 +1,58 @@
 {
   "Version": 1,
-  "Hash": "GQ76eBtpZvWnywKtssbqyDTpPudcE5jLZbmk6gvV4oM=",
+  "Hash": "hPUs0D9lFJm4+Jy2MV39ggbiXEyZCxO6khb3KoKgTes=",
   "Source": "Biljard",
   "BasePath": "_content/Biljard",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "Biljard\\wwwroot",
+      "Source": "Biljard",
+      "ContentRoot": "C:\\Users\\Aron Somi\\Desktop\\biljard_projekt\\biljard\\Biljard\\wwwroot\\",
+      "BasePath": "_content/Biljard",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\Aron Somi\\Desktop\\biljard_projekt\\biljard\\Biljard\\wwwroot\\index.html",
+      "SourceId": "Biljard",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Aron Somi\\Desktop\\biljard_projekt\\biljard\\Biljard\\wwwroot\\",
+      "BasePath": "_content/Biljard",
+      "RelativePath": "index.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\index.html"
+    },
+    {
+      "Identity": "C:\\Users\\Aron Somi\\Desktop\\biljard_projekt\\biljard\\Biljard\\wwwroot\\lobby.html",
+      "SourceId": "Biljard",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Aron Somi\\Desktop\\biljard_projekt\\biljard\\Biljard\\wwwroot\\",
+      "BasePath": "_content/Biljard",
+      "RelativePath": "lobby.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\lobby.html"
+    }
+  ]
 }

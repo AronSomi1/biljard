@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Lobby System</title>
+</head>
+
+<body>
+    <button id="createLobby">Create Lobby</button>
+    <br />
+    <input type="text" id="lobbyId" placeholder="Enter Lobby ID">
+    <button id="joinLobby">Join Lobby</button>
+
+    <script>
+        document.getElementById('createLobby').onclick = async function () {
+            const response = await fetch('/createLobby', { method: 'POST' });
+            const data = await response.json();
+            const lobbyId = data.id;
+            window.location.href = `/lobby/${lobbyId}`;
+        };
+        document.getElementById('joinLobby').onclick = async function joinLobby() {
+            const id = document.getElementById('lobbyId').value;
+            const response = await fetch(`/joinLobby/${id}`, { method: 'POST' });
+            const data = await response.json();
+            if (data.errors) {
+                alert(data.errors.id);
+                return;
+            }
+
+            window.location.href = `/lobby/${id}`;
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Aron Somi\\Desktop\\biljard_projekt\\biljard\\Biljard\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\Aron Somi\\Desktop\\biljard_projekt\\biljard\\Biljard\\wwwroot\\lobby.html",
+      "PackagePath": "staticwebassets\\lobby.html"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Biljard.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.Biljard.props",
+      "PackagePath": "build\\Biljard.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.Biljard.props",
+      "PackagePath": "buildMultiTargeting\\Biljard.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.Biljard.props",
+      "PackagePath": "buildTransitive\\Biljard.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
