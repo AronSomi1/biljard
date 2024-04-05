@@ -17,6 +17,7 @@
             });
 
             updateQueue(); // Update the queue after joining
+            displayBallChoices(); // Display ball choices after joining
         }
 
         async function userReady() {
@@ -38,7 +39,6 @@
             // Get the current queue from the server
             const response = await fetch(`/lobby/${lobbyId}/queue`);
             const queue = await response.json();
-            console.log(queue);
 
             // Display the queue
             const queueList = document.getElementById('queue');
@@ -51,11 +51,69 @@
                 queueList.appendChild(li);
             });
         }
+        async function displayAllowedBalls() {
+            const lobbyId = window.location.pathname.split('/').pop();
+            const response = await fetch(`/lobby/${lobbyId}/NbrOfBalls`);
+            const data = await response.json();
+            console.log(data);
+            const p = document.getElementById('Allowed balls');
+            p.textContent = `Allowed Balls: ${data.nbrOfBalls}`;
+        }
+
+        async function displayBallChoices() {
+            const lobbyId = window.location.pathname.split('/').pop();
+            const response = await fetch(`/lobby/${lobbyId}/NbrOfBalls`);
+            const data = await response.json();
+            const nbrOfBalls = data.nbrOfBalls;
+
+            const ballChoiceList = document.getElementById('BallChoice');
+            ballChoiceList.innerHTML = ''; // Clear existing ball choices
+
+            for (let i = 0; i < nbrOfBalls; i++) {
+                // Create a list item
+                const li = document.createElement('li');
+
+                // Create an input element
+                const input = document.createElement('input');
+                input.type = 'text'; // Set input type to text
+                input.id = `ball${i + 1}`; // Assign a unique ID
+                input.placeholder = `Ball ${i + 1} Choice`; // Placeholder text for each input
+
+                // Append the input to the list item
+                li.appendChild(input);
+
+                // Append the list item to the list
+                ballChoiceList.appendChild(li);
+            }
+        }
+
+        async function ballChoice() {
+            const lobbyId = window.location.pathname.split('/').pop();
+            const name = document.getElementById('usernameInput').value;
+
+            // Determine the number of ball inputs
+            const ballInputs = document.querySelectorAll('[id^="ball"]');
+            console.log(ballInputs);
+            const balls = Array.from(ballInputs).map(input => parseInt(input.value) || 0); // Convert input values to integers, defaulting to 0 if not a number
+            console.log(balls);
+            // Send the data to the backend
+            const response = await fetch(`/lobby/${lobbyId}/ballChoice`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ Username: name, Balls: balls })
+            });
+            const data = await response.json();
+            console.log(data);
+        }
+
 
         // Periodically refresh the queue
         setInterval(updateQueue, 5000); // 5 seconds
 
         document.addEventListener('DOMContentLoaded', updateQueue); // Initial load
+        document.addEventListener('DOMContentLoaded', displayAllowedBalls); // Initial load
     </script>
 </head>
 
@@ -65,6 +123,10 @@
     <button onclick="userReady()">Ready</button>
     <h2>Queue</h2>
     <ul id="queue"></ul>
+    <p id="Allowed balls"></p>
+    <h2>Ball Choices</h2>
+    <u1 id="BallChoice"></u1>
+    <button onclick="ballChoice()">Submit Ball Choices</button>
 </body>
 
 </html>

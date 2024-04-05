@@ -23,10 +23,10 @@ app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
 
-app.MapPost("/createLobby", (LobbyHandler lb) =>
+app.MapPost("/createLobby", (LobbyHandler lb, BallCount BC) =>
 {
-    var id = lb.CreateLobby();
-    return TypedResults.Created($"/lobby/{id}", new { id });
+    var id = lb.CreateLobby(BC.NbrOfBalls);
+    return TypedResults.Created($"/lobby/{id}", new { id, BC.NbrOfBalls });
 });
 
 app.MapPost("/joinLobby/{id}", (LobbyHandler lb, int id) =>
@@ -80,6 +80,20 @@ app.MapPost("/lobby/{id}/userReady", (LobbyHandler lb, int id, UserRequest userR
     return TypedResults.Ok(new { id, userRequest.Username });
 }
 );
+
+app.MapGet("/lobby/{id}/NbrOfBalls", (LobbyHandler lb, int id) =>
+{
+    var lobby = lb.GetLobby(id);
+    return TypedResults.Ok(new { id, lobby.NbrOfBalls });
+});
+
+app.MapPost("/lobby/{id}/ballChoice", (LobbyHandler lb, int id, UsersBallChoice UBC) =>
+{
+    var lobby = lb.GetLobby(id);
+    lobby.GetUser(UBC.Username).Balls = UBC.Balls;
+    return TypedResults.Ok(new { id, UBC.Username, UBC.Balls });
+});
+
 
 /* app.MapPost("/loby/{id}/startGame", (LobbyHandler lb, int id) =>
 {

@@ -3,6 +3,7 @@ public class Lobby
 {
     public int Id { get; set; }
     public List<User> Users { get; set; } = new List<User>();
+    public int NbrOfBalls { get; set; } = 3;
 
     public User GetUser(string username)
     {

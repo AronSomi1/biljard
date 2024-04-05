@@ -6,14 +6,27 @@
 </head>
 
 <body>
-    <button id="createLobby">Create Lobby</button>
+    <h4>To create a new lobby</h4>
+    <p>Enter the amount of balls used in the game</p>
+    <input type="text" id="ballLimit" placeholder="Enter Amount of Balls " value="3">
     <br />
+    <button id="createLobby">Create Lobby</button>
+    <h4>To join an existing lobby</h4>
+    <p>Enter the lobby id</p>
     <input type="text" id="lobbyId" placeholder="Enter Lobby ID">
+    <br />
     <button id="joinLobby">Join Lobby</button>
 
     <script>
         document.getElementById('createLobby').onclick = async function () {
-            const response = await fetch('/createLobby', { method: 'POST' });
+            const nbr = document.getElementById('ballLimit').value;
+            const response = await fetch('/createLobby', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ NbrOfBalls: nbr })
+            });
             const data = await response.json();
             const lobbyId = data.id;
             window.location.href = `/lobby/${lobbyId}`;
