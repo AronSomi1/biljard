@@ -39,16 +39,18 @@
             // Get the current queue from the server
             const response = await fetch(`/lobby/${lobbyId}/queue`);
             const queue = await response.json();
+            console.log(queue);
 
             // Display the queue
             const queueList = document.getElementById('queue');
             queueList.innerHTML = ''; // Clear existing queue
 
-            for (const [user, isReady] of Object.entries(queue)) {
+            queue.forEach(user => {
                 const li = document.createElement('li');
-                li.textContent = `${user} - Ready: ${isReady}`;
+                // Access properties directly from the user object
+                li.textContent = `${user.username} - Ready: ${user.ready}`;
                 queueList.appendChild(li);
-            }
+            });
         }
 
         // Periodically refresh the queue

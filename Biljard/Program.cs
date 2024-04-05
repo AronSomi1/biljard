@@ -39,9 +39,9 @@ app.MapPost("/joinLobby/{id}", (LobbyHandler lb, int id) =>
     var lb = context.GetArgument<LobbyHandler>(0);
     var errors = new Dictionary<string, string[]>();
 
-    if (!lb.Found((int)id))
+    if (!lb.ContainsLobby((int)id))
     {
-        errors.Add("id", ["Lobby not found"]);
+        errors.Add("id", ["Lobby not ContainsLobby"]);
         return Results.ValidationProblem(errors);
     }
     return await next(context);
@@ -56,7 +56,7 @@ app.MapGet("/lobby/{id}", async (HttpContext context, string id) =>
 
 app.MapPost("/lobby/{id}/addUser", (LobbyHandler lb, int id, [FromBody] string username) =>
 {
-    lb.AddUserToLobby(id, username);
+    lb.GetLobby(id).AddUser(username);
     return TypedResults.Ok(new { id, username });
 
 }).AddEndpointFilter(async (context, next) =>
@@ -65,9 +65,9 @@ app.MapPost("/lobby/{id}/addUser", (LobbyHandler lb, int id, [FromBody] string u
     var lb = context.GetArgument<LobbyHandler>(0);
     var errors = new Dictionary<string, string[]>();
 
-    if (!lb.Found((int)id))
+    if (!lb.ContainsLobby((int)id))
     {
-        errors.Add("id", ["Lobby not found"]);
+        errors.Add("id", ["Lobby not ContainsLobby"]);
         return Results.ValidationProblem(errors);
     }
     return await next(context);
@@ -76,17 +76,30 @@ app.MapPost("/lobby/{id}/addUser", (LobbyHandler lb, int id, [FromBody] string u
 app.MapPost("/lobby/{id}/userReady", (LobbyHandler lb, int id, [FromBody] string Username) =>
 {
     var lobby = lb.GetLobby(id);
-    lobby.UserReady(Username);
+    lobby.GetUser(Username).Ready = !lobby.GetUser(Username).Ready;
     return TypedResults.Ok(new { id, Username });
 }
 );
 
+/* app.MapPost("/loby/{id}/startGame", (LobbyHandler lb, int id) =>
+{
+    var lobby = lb.GetLobby(id);
+    if (lobby.CheckIfAllUsersReady())
+    {
+        return TypedResults.Ok(new { id });
+    }
+    return TypedResults.BadRequest(new { id });
+}); */
+
+
+
 
 app.MapGet("/lobby/{id}/queue", (LobbyHandler lb, int id) =>
 {
-    var users = lb.GetUsersInLobby(id);
+    var users = lb.GetLobby(id).Users;
     return TypedResults.Ok(users);
 });
+
 
 
 app.Run();
@@ -99,7 +112,7 @@ class LobbyHandler
     {
         return lobbies[id];
     }
-    public Boolean Found(int value)
+    public Boolean ContainsLobby(int value)
     {
         return lobbies.ContainsKey(value);
     }
@@ -111,19 +124,6 @@ class LobbyHandler
         lobbies.Add(id, new Lobby() { Id = id });
         return id;
     }
-    public bool AddUserToLobby(int id, string username)
-    {
-        if (lobbies.ContainsKey(id))
-        {
-            lobbies[id].AddUser(username);
-            return true;
-        }
-        return false;
-    }
-    public Dictionary<string, string> GetUsersInLobby(int id)
-    {
-        return lobbies[id].GetMappedUsersInLobby();
-    }
 
 
 }
@@ -131,29 +131,23 @@ class LobbyHandler
 public class Lobby
 {
     public int Id { get; set; }
-    public List<string> Usernames { get; set; } = new List<string>();
-    private Dictionary<string, bool> UsersReady = new();
+    public List<User> Users { get; set; } = new List<User>();
 
+    public User GetUser(string username)
+    {
+        return Users.Find(user => user.Username == username);
+    }
     public void AddUser(string username)
     {
-        Usernames.Add(username);
-        UsersReady.Add(username, false);
-    }
-    public void UserReady(string username)
-    {
-        UsersReady[username] = !UsersReady[username];
-
+        Users.Add(new User(username, false));
     }
 
-    public bool IsUserReady(string username)
-    {
-        return UsersReady[username];
-    }
+
     public bool CheckIfAllUsersReady()
     {
-        foreach (var user in Usernames)
+        foreach (var user in Users)
         {
-            if (!UsersReady.ContainsKey(user))
+            if (!user.Ready)
             {
                 return false;
             }
@@ -161,16 +155,16 @@ public class Lobby
         return true;
     }
 
-    public Dictionary<string, string> GetMappedUsersInLobby()
+}
+
+public class User
+{
+    public string Username { get; set; }
+    public bool Ready { get; set; }
+
+    public User(string username, bool ready)
     {
-        Dictionary<string, string> users = new();
-
-        foreach (var u in Usernames)
-        {
-            users.Add(u, IsUserReady(u).ToString());
-        }
-        return users;
+        Username = username;
+        Ready = ready;
     }
-
-
 }
