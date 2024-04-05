@@ -54,10 +54,10 @@ app.MapGet("/lobby/{id}", async (HttpContext context, string id) =>
 
 });
 
-app.MapPost("/lobby/{id}/addUser", (LobbyHandler lb, int id, [FromBody] string username) =>
+app.MapPost("/lobby/{id}/addUser", (LobbyHandler lb, int id, UserRequest userRequest) =>
 {
-    lb.GetLobby(id).AddUser(username);
-    return TypedResults.Ok(new { id, username });
+    lb.GetLobby(id).AddUser(userRequest.Username);
+    return TypedResults.Ok(new { id, userRequest.Username });
 
 }).AddEndpointFilter(async (context, next) =>
 {
@@ -73,11 +73,11 @@ app.MapPost("/lobby/{id}/addUser", (LobbyHandler lb, int id, [FromBody] string u
     return await next(context);
 });
 
-app.MapPost("/lobby/{id}/userReady", (LobbyHandler lb, int id, [FromBody] string Username) =>
+app.MapPost("/lobby/{id}/userReady", (LobbyHandler lb, int id, UserRequest userRequest) =>
 {
     var lobby = lb.GetLobby(id);
-    lobby.GetUser(Username).Ready = !lobby.GetUser(Username).Ready;
-    return TypedResults.Ok(new { id, Username });
+    lobby.GetUser(userRequest.Username).Ready = !lobby.GetUser(userRequest.Username).Ready;
+    return TypedResults.Ok(new { id, userRequest.Username });
 }
 );
 
@@ -105,66 +105,5 @@ app.MapGet("/lobby/{id}/queue", (LobbyHandler lb, int id) =>
 app.Run();
 
 
-class LobbyHandler
-{
-    private readonly Dictionary<int, Lobby> lobbies = new();
-    public Lobby GetLobby(int id)
-    {
-        return lobbies[id];
-    }
-    public Boolean ContainsLobby(int value)
-    {
-        return lobbies.ContainsKey(value);
-    }
-
-    public int CreateLobby()
-    {
-        Random rand = new Random();
-        int id = rand.Next(1000, 9999);
-        lobbies.Add(id, new Lobby() { Id = id });
-        return id;
-    }
 
 
-}
-
-public class Lobby
-{
-    public int Id { get; set; }
-    public List<User> Users { get; set; } = new List<User>();
-
-    public User GetUser(string username)
-    {
-        return Users.Find(user => user.Username == username);
-    }
-    public void AddUser(string username)
-    {
-        Users.Add(new User(username, false));
-    }
-
-
-    public bool CheckIfAllUsersReady()
-    {
-        foreach (var user in Users)
-        {
-            if (!user.Ready)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-}
-
-public class User
-{
-    public string Username { get; set; }
-    public bool Ready { get; set; }
-
-    public User(string username, bool ready)
-    {
-        Username = username;
-        Ready = ready;
-    }
-}

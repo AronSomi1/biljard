@@ -5,23 +5,22 @@
     <title>Lobby Queue</title>
     <script>
         async function joinQueue() {
-            const username = document.getElementById('username').value;
+            const name = document.getElementById('usernameInput').value;
             const lobbyId = window.location.pathname.split('/').pop();
-
             // POST the username to the server
             await fetch(`/lobby/${lobbyId}/addUser`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(username)
+                body: JSON.stringify({ username: name })
             });
 
             updateQueue(); // Update the queue after joining
         }
 
         async function userReady() {
-            const username = document.getElementById('username').value;
+            const name = document.getElementById('usernameInput').value;
             const lobbyId = window.location.pathname.split('/').pop();
 
             await fetch(`/lobby/${lobbyId}/userReady`, {
@@ -29,7 +28,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(username)
+                body: JSON.stringify({ username: name })
             });
 
         }
@@ -61,7 +60,7 @@
 </head>
 
 <body>
-    <input type="text" id="username" placeholder="Enter Username">
+    <input type="text" id="usernameInput" placeholder="Enter Username">
     <button onclick="joinQueue()">Join Queue</button>
     <button onclick="userReady()">Ready</button>
     <h2>Queue</h2>
